@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Forecast App</title>
+</head>
+<body>
+    <h2>Forecast App</h2>
+    <div class="main">
+        <div class="search">
+            <input type="text" name="" id="search" placeholder="Search for Cities">
+            <button><img src="search_logo.png" alt=""></button>
+        </div>
+        <div class="Smain">
+            <div class="Wlogo"><img src="clear.png" alt="" class="logo"></div>
+            <div><h1 class="temp">0°C</h1></div>
+            <div><h2 class="city">Enter your city</h2></div>
+        </div>
+        <div class="moreDetails">
+            <div class="parts">
+                <div><h1 class="hum">--%</h1></div>
+                <div><h2 class="desc">Humidity</h2></div>
+            </div>
+            <div class="parts">
+                <div><h1 class="wind">--km/h</h1></div>
+                <div><h2 class="desc">WindSpeed</h2></div>
+            </div>
+            <div class="parts">
+                <div><h1 class="Srise">---</h1></div>
+                <div><h2 class="desc">Sun Rise</h2></div>
+            </div>
+            <div class="parts">
+                <div><h1 class="Sset">---</h1></div>
+                <div><h2 class="desc">Sun Set</h2></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const logo = document.querySelector(".logo");
+
+        async function checkWeather(city){
+            const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/$${city}?unitGroup=us&key=BADKXRSERM4S5MDSR8VEJTSAW&contentType=json`);
+            var data = await response.json();
+
+            let temp = Math.round((data.currentConditions.temp-32)*0.56);
+            console.log(data);
+            document.querySelector(".city").innerHTML = data.resolvedAddress;
+            document.querySelector(".temp").innerHTML = temp +"°C";
+            document.querySelector(".hum").innerHTML = Math.round(data.currentConditions.humidity)+"%";
+            document.querySelector(".wind").innerHTML = Math.round(data.currentConditions.windspeed)+"km/hr";
+            document.querySelector(".Srise").innerHTML = data.currentConditions.sunrise;
+            document.querySelector(".Sset").innerHTML = data.currentConditions.sunset;
+            if(data.currentConditions.icon == "snow"){logo.src = "snow.png";}
+            else if(data.currentConditions.icon == "rain"){logo.src = "rain.png"}
+            else if(data.currentConditions.icon == "cloudy"){logo.src = "clouds.png"}
+            else if(data.currentConditions.icon == "clear"){logo.src = "clear.png"}
+        }
+        searchBtn.addEventListener("click",()=>{
+            checkWeather(searchBox.value);
+            searchBox.value = "";
+        })
+    </script>
+
+
+</body>
+</html>
